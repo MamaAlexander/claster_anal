@@ -4,15 +4,8 @@ umap-learn
 pandas
 scikit-learn
 numpy
-sentence_transformers
-umap
+sentence-transformers
 torch
 transformers
-os
 pymorphy2
-re
-imaplib
-email
-base64
 bs4
-re
