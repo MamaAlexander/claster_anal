@@ -5,7 +5,6 @@ pandas
 scikit-learn
 numpy
 sentence_transformers
-sklearn
 umap
 torch
 transformers
