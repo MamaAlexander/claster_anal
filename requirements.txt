@@ -9,3 +9,4 @@ torch
 transformers
 pymorphy2
 bs4
+openpyxl
