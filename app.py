@@ -11,7 +11,10 @@ import pandas as pd
 # df = pd.DataFrame({"Очищенный текст": ["Текст1", "Текст2"], "Cluster": [0, 1], "UMAP1": [1, 2], "UMAP2": [3, 4]})
 
 # Заголовок приложения
+
 st.title("Интерактивная визуализация кластеров текстов")
+
+df = pd.read_excel('data.xlsx')
 
 # Построение интерактивного графика с Plotly
 fig = px.scatter(
