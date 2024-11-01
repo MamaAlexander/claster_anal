@@ -1,8 +1,10 @@
 import streamlit as st
 import plotly.express as px
-from sklearn.decomposition import PCA
+from sklearn.cluster import DBSCAN
 import umap
+import numpy as np
 import pandas as pd
+import ast  # для преобразования строк в списки
 
 # Заголовок приложения
 st.title("Интерактивная визуализация кластеров текстов")
@@ -10,34 +12,39 @@ st.title("Интерактивная визуализация кластеров
 # Загружаем данные
 df = pd.read_excel('data.xlsx')
 
-# Убедитесь, что у вас есть векторные представления текста
-# Пример использования колонки 'embeddings' для снижения размерности
-if 'embeddings' in df.columns:
-    embeddings = pd.DataFrame(df['embeddings'].tolist())  # Преобразуем колонку списков в DataFrame
+# Преобразуем строки в массивы, если embeddings хранятся в строковом формате
+df['embeddings'] = df['embeddings'].apply(lambda x: np.array(ast.literal_eval(x)) if isinstance(x, str) else x)
 
-    # Применяем UMAP для снижения размерности до 2D
-    reducer = umap.UMAP(n_neighbors=15, min_dist=0.1, n_components=2, random_state=42)
-    umap_embeddings = reducer.fit_transform(embeddings)
+# Преобразуем столбец 'embeddings' в массив
+embeddings = np.vstack(df['embeddings'].values)
 
-    # Добавляем результаты снижения размерности в датафрейм
-    df['UMAP1'] = umap_embeddings[:, 0]
-    df['UMAP2'] = umap_embeddings[:, 1]
+# Применяем DBSCAN для кластеризации
+dbscan = DBSCAN(eps=0.1, min_samples=5, metric='cosine')
+cluster_labels = dbscan.fit_predict(embeddings)
 
-    # Проверяем наличие колонки с кластерами
-    if 'Cluster' not in df.columns:
-        # Используем DBSCAN для кластеризации, если кластеры не определены
-        from sklearn.cluster import DBSCAN
-        dbscan = DBSCAN(eps=0.5, min_samples=5, metric='cosine')
-        df['Cluster'] = dbscan.fit_predict(embeddings)
-else:
-    st.error("В датафрейме отсутствуют эмбеддинги для снижения размерности и визуализации.")
-    st.stop()
+# Добавляем метки кластеров в датафрейм
+df['Cluster'] = cluster_labels
 
-# Построение интерактивного графика с Plotly
+# Уменьшение размерности до 2D для визуализации с использованием UMAP
+reducer = umap.UMAP(n_neighbors=5, min_dist=0.1, n_components=2, random_state=42)
+embeddings_2d = reducer.fit_transform(embeddings)
+
+# Добавляем результаты UMAP в датафрейм для визуализации
+df['UMAP1'] = embeddings_2d[:, 0]
+df['UMAP2'] = embeddings_2d[:, 1]
+
+# Построение интерактивного scatter plot с Plotly
 fig = px.scatter(
     df, x='UMAP1', y='UMAP2',
     color='Cluster',
     hover_data={'Очищенный текст': True, 'UMAP1': False, 'UMAP2': False, 'Cluster': True}
+)
+
+# Настройка графика
+fig.update_layout(
+    title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
+    xaxis_title="UMAP1",
+    yaxis_title="UMAP2"
 )
 
 # Отображение графика в Streamlit
