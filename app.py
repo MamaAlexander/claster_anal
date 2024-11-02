@@ -42,7 +42,7 @@ fig = px.scatter(
 
 # Настройка графика
 fig.update_layout(
-    title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
+    # title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
     xaxis_title="UMAP1",
     yaxis_title="UMAP2"
 )
@@ -51,45 +51,45 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 
-st.title("Пример 2")
+# st.title("Пример 2")
 
-# Преобразуем строки в массивы, если embeddings хранятся в строковом формате
-df['embeddings TF-IDF'] = df['embeddings TF-IDF'].apply(lambda x: np.array(ast.literal_eval(x)) if isinstance(x, str) else x)
+# # Преобразуем строки в массивы, если embeddings хранятся в строковом формате
+# df['embeddings TF-IDF'] = df['embeddings TF-IDF'].apply(lambda x: np.array(ast.literal_eval(x)) if isinstance(x, str) else x)
 
-# Преобразуем столбец 'embeddings' в массив
-embeddings = np.vstack(df['embeddings TF-IDF'].values)
+# # Преобразуем столбец 'embeddings' в массив
+# embeddings = np.vstack(df['embeddings TF-IDF'].values)
 
-# Применяем DBSCAN для кластеризации
-dbscan = DBSCAN(eps=0.1, min_samples=5, metric='cosine')
-cluster_labels = dbscan.fit_predict(embeddings)
+# # Применяем DBSCAN для кластеризации
+# dbscan = DBSCAN(eps=0.1, min_samples=5, metric='cosine')
+# cluster_labels = dbscan.fit_predict(embeddings)
 
-# Добавляем метки кластеров в датафрейм
-df['Cluster'] = cluster_labels
+# # Добавляем метки кластеров в датафрейм
+# df['Cluster'] = cluster_labels
 
-# Уменьшение размерности до 2D для визуализации с использованием UMAP
-reducer = umap.UMAP(n_neighbors=5, min_dist=0.1, n_components=2, random_state=42)
-embeddings_2d = reducer.fit_transform(embeddings)
+# # Уменьшение размерности до 2D для визуализации с использованием UMAP
+# reducer = umap.UMAP(n_neighbors=5, min_dist=0.1, n_components=2, random_state=42)
+# embeddings_2d = reducer.fit_transform(embeddings)
 
-# Добавляем результаты UMAP в датафрейм для визуализации
-df['UMAP1'] = embeddings_2d[:, 0]
-df['UMAP2'] = embeddings_2d[:, 1]
+# # Добавляем результаты UMAP в датафрейм для визуализации
+# df['UMAP1'] = embeddings_2d[:, 0]
+# df['UMAP2'] = embeddings_2d[:, 1]
 
-# Построение интерактивного scatter plot с Plotly
-fig = px.scatter(
-    df, x='UMAP1', y='UMAP2',
-    color='Cluster',
-    hover_data={'Очищенный текст': True, 'UMAP1': False, 'UMAP2': False, 'Cluster': True}
-)
+# # Построение интерактивного scatter plot с Plotly
+# fig = px.scatter(
+#     df, x='UMAP1', y='UMAP2',
+#     color='Cluster',
+#     hover_data={'Очищенный текст': True, 'UMAP1': False, 'UMAP2': False, 'Cluster': True}
+# )
 
-# Настройка графика
-fig.update_layout(
-    title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
-    xaxis_title="UMAP1",
-    yaxis_title="UMAP2"
-)
+# # Настройка графика
+# fig.update_layout(
+#     # title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
+#     xaxis_title="UMAP1",
+#     yaxis_title="UMAP2"
+# )
 
-# Отображение графика в Streamlit
-st.plotly_chart(fig, use_container_width=True)
+# # Отображение графика в Streamlit
+# st.plotly_chart(fig, use_container_width=True)
 
 
 st.title("Пример 3")
@@ -124,7 +124,7 @@ fig = px.scatter(
 
 # Настройка графика
 fig.update_layout(
-    title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
+    # title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
     xaxis_title="UMAP1",
     yaxis_title="UMAP2"
 )
