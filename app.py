@@ -36,7 +36,7 @@ df['UMAP2'] = embeddings_2d[:, 1]
 # Построение интерактивного scatter plot с Plotly
 fig = px.scatter(
     df, x='UMAP1', y='UMAP2',
-    color='Cluster',
+    color='Кластер',
     hover_data={'Очищенный текст': True, 'UMAP1': False, 'UMAP2': False, 'Cluster': True}
 )
 
