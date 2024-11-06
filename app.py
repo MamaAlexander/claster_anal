@@ -36,16 +36,24 @@ df['UMAP2'] = embeddings_2d[:, 1]
 # Построение интерактивного scatter plot с Plotly
 fig = px.scatter(
     df, x='UMAP1', y='UMAP2',
-    color='Кластер',
+    color='Cluster',
     hover_data={'Очищенный текст': True, 'UMAP1': False, 'UMAP2': False, 'Cluster': True}
 )
 
 # Настройка графика
 fig.update_layout(
-    # title="Интерактивная кластеризация текстов с UMAP и DBSCAN",
     xaxis_title="UMAP1",
     yaxis_title="UMAP2"
 )
 
 # Отображение графика в Streamlit
 st.plotly_chart(fig, use_container_width=True)
+
+# Фильтрация данных и вывод текста по кластерам
+selected_cluster = st.selectbox("Выберите кластер для отображения текста:", sorted(df['Cluster'].unique()))
+
+# Фильтруем датафрейм по выбранному кластеру и выводим текст
+cluster_texts = df[df['Cluster'] == selected_cluster]['Очищенный текст']
+st.write(f"Тексты для кластера {selected_cluster}:")
+for text in cluster_texts:
+    st.write(text)
